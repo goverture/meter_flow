@@ -33,7 +33,7 @@ func TestSchedule(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		delays := schedule(tt.numCalls, tt.requestCount, tt.timeFrame)
+		delays, _ := schedule(tt.numCalls, tt.requestCount, tt.timeFrame, []int64{}, 1729954499)
 		if !reflect.DeepEqual(delays, tt.expected) {
 			t.Errorf("calculateDelays(%d, %d, %d) = %v; want %v", tt.numCalls, tt.requestCount, tt.timeFrame, delays, tt.expected)
 		}

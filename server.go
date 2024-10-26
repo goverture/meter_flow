@@ -6,12 +6,14 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"time"
 )
 
 type Resource struct {
 	Name        string
 	RequestCount int // Maximum requests allowed
 	TimeFrame   int  // Time frame in seconds
+	ScheduledCalls []int64    // Track scheduled timestamps for this resource
 }
 
 type Server struct {
@@ -76,8 +78,14 @@ func (s *Server) scheduleCalls(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Call the separate scheduling logic function
-	delays := schedule(data.NumCalls, resource.RequestCount, resource.TimeFrame)
+	// Get the current time and schedule new calls
+	now := time.Now().Unix()
+	delays, updatedCalls := schedule(data.NumCalls, resource.RequestCount, resource.TimeFrame, resource.ScheduledCalls, now)
+
+	// Update the resource with the latest scheduled calls
+	resource.ScheduledCalls = updatedCalls
+	s.resources[data.ResourceName] = resource
+	s.mu.Unlock()
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(delays)

@@ -76,28 +76,8 @@ func (s *Server) scheduleCalls(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Calculate the number of full batches and the remaining calls
-	totalCalls := data.NumCalls
-	batchSize := resource.RequestCount
-	timeFrame := resource.TimeFrame
-	var delays []int
-	batchCount := totalCalls / batchSize
-	remainingCalls := totalCalls % batchSize
-
-	// Schedule full batches with a delay after each batch
-	for i := 0; i < batchCount; i++ {
-		for j := 0; j < batchSize; j++ {
-			delays = append(delays, i*timeFrame) // Each call in the batch gets the same delay
-		}
-	}
-
-	// Schedule any remaining calls with one additional delay
-	if remainingCalls > 0 {
-		finalDelay := batchCount * timeFrame
-		for k := 0; k < remainingCalls; k++ {
-			delays = append(delays, finalDelay)
-		}
-	}
+	// Call the separate scheduling logic function
+	delays := schedule(data.NumCalls, resource.RequestCount, resource.TimeFrame)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(delays)

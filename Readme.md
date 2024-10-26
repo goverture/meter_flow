@@ -20,3 +20,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"resource_name": "rate_lim
 ```
 
 This return [0,0,1,1,2] which means that the first two calls can be made immediately, the third and fourth calls should be made after 1 second and the fifth call should be made after 2 seconds.
+
+# Benchmark
+
+go-wrk -c 50 -d 10 -M POST -H "Content-Type: application/json" -body '{"resource_name": "rate_limited_resource", "num_calls": 5}' http://localhost:8080/schedule

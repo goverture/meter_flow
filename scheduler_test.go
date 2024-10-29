@@ -49,7 +49,6 @@ func makeDelaySlice(n, delay int) []int {
 	return slice
 }
 
-
 func TestSequentialScheduling(t *testing.T) {
 	// Initial parameters (3 calls per minute rate limit)
 	requestCount := 3

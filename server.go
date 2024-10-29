@@ -72,7 +72,6 @@ func (s *Server) scheduleCalls(w http.ResponseWriter, r *http.Request) {
 
 	s.mu.Lock()
 	resource, exists := s.resources[data.ResourceName]
-	s.mu.Unlock()
 	if !exists {
 		http.Error(w, "Resource not found", http.StatusNotFound)
 		return

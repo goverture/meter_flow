@@ -48,3 +48,42 @@ func makeDelaySlice(n, delay int) []int {
 	}
 	return slice
 }
+
+
+func TestSequentialScheduling(t *testing.T) {
+	// Initial parameters (3 calls per minute rate limit)
+	requestCount := 3
+	timeFrame := 60
+	numCalls := 2
+
+	// Initial state for "previous calls"
+	previousCalls := []int64{}
+	now := int64(0) // Starting time
+
+	// First scheduling call
+	expectedFirst := []int{0, 0} // Both calls can happen immediately
+	delays, updatedCalls := schedule(numCalls, requestCount, timeFrame, previousCalls, now)
+	if !reflect.DeepEqual(delays, expectedFirst) {
+		t.Errorf("First schedule call = %v; want %v", delays, expectedFirst)
+	}
+
+	// Wait for 30 seconds (simulate passage of time) before the next scheduling
+	now += 30
+
+	// Second scheduling call
+	expectedSecond := []int{0, 30} // One call immediately, one delayed by 30s due to limited slots
+	delays, updatedCalls = schedule(numCalls, requestCount, timeFrame, updatedCalls, now)
+	if !reflect.DeepEqual(delays, expectedSecond) {
+		t.Errorf("Second schedule call = %v; want %v", delays, expectedSecond)
+	}
+
+	// Wait for another 30 seconds (start a new minute)
+	now += 30
+
+	// Third scheduling call
+	expectedThird := []int{0, 30} // There was 2 calls in the past 60 seconds, we can schedule one and the other will be delayed by 30s
+	delays, updatedCalls = schedule(numCalls, requestCount, timeFrame, updatedCalls, now)
+	if !reflect.DeepEqual(delays, expectedThird) {
+		t.Errorf("Third schedule call = %v; want %v", delays, expectedThird)
+	}
+}

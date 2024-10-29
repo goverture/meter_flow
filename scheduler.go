@@ -1,5 +1,20 @@
 package main
 
+// schedule schedules a set of new requests based on a sliding window rate limiting algorithm.
+// TODO: Support other algorithms (?)
+//
+// Parameters:
+//
+// numCalls (int): The number of new requests to schedule.
+// requestCount (int): The maximum number of requests allowed within the specified time frame.
+// timeFrame (int): The duration in seconds of the sliding time window.
+// previousCalls ([]int64): A slice of Unix timestamps (in seconds) representing the previous requests.
+// now (int64): The current Unix timestamp (in seconds).
+//
+// Returns:
+//
+// delays ([]int): A slice of delays (in seconds) for each new request.
+// previousCalls ([]int64): The updated slice of previous requests, including the new ones.func schedule(numCalls, requestCount, timeFrame int, previousCalls []int64, now int64) ([]int, []int64) {
 func schedule(numCalls, requestCount, timeFrame int, previousCalls []int64, now int64) ([]int, []int64) {
 	var delays []int
 
@@ -35,7 +50,7 @@ func schedule(numCalls, requestCount, timeFrame int, previousCalls []int64, now 
 func filterRecentCalls(calls []int64, start int64) []int64 {
 	var filtered []int64
 	for _, t := range calls {
-		if t >= start {
+		if t > start {
 			filtered = append(filtered, t)
 		}
 	}

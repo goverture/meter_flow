@@ -27,7 +27,13 @@ func NewServer() *Server {
 func main() {
 	server := NewServer()
 
+	// "resources" endpoints
 	http.HandleFunc("POST /resources", server.registerResource)
+	http.HandleFunc("GET /resources", server.listResources)
+	http.HandleFunc("PUT /resources", server.updateResource)
+	http.HandleFunc("DELETE /resources", server.deleteResource)
+
+	// "schedule" endpoint
 	http.HandleFunc("POST /schedule", server.scheduleCalls)
 
 	port := ":8080"

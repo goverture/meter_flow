@@ -42,11 +42,20 @@ func (s *Server) registerResource(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(message))
 }
 
+type ResourceResponse struct {
+    Name string `json:"name"`
+    RequestCount int `json:"request_count"`
+	TimeFrame int `json:"time_frame"`
+}
 
 func (s *Server) listResources(w http.ResponseWriter, r *http.Request) {
-    resources := make([]Resource, 0, len(s.resources))
+    resources := make([]ResourceResponse, 0, len(s.resources))
     for _, resource := range s.resources {
-        resources = append(resources, resource)
+        resources = append(resources, ResourceResponse{
+            Name: resource.Name,
+            RequestCount: resource.RequestCount,
+            TimeFrame: resource.TimeFrame,
+        })
     }
 
     w.Header().Set("Content-Type", "application/json")

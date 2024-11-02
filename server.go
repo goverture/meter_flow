@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"sync"
 )
 
@@ -36,7 +37,11 @@ func main() {
 	// "schedule" endpoint
 	http.HandleFunc("POST /schedule", server.scheduleCalls)
 
-	port := ":8080"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port if not specified
+	}
+
 	log.Println("MeterFlow server is running on port", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

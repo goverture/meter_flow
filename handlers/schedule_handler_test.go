@@ -1,8 +1,9 @@
-package main
+package handlers
 
 import (
 	"bytes"
 	"encoding/json"
+	"meter_flow/server"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +11,7 @@ import (
 
 func TestScheduleCalls(t *testing.T) {
 	// Create a new server
-	server := NewServer()
+	server := server.NewServer()
 
 	// Register a test resource
 	registerTestResource(t, server)
@@ -53,7 +54,8 @@ func TestScheduleCalls(t *testing.T) {
 			rr := httptest.NewRecorder()
 
 			// Call the scheduleCalls handler
-			server.scheduleCalls(rr, req)
+			handler := ScheduleCalls(server)
+			handler(rr, req)
 
 			// Check the response status code
 			if rr.Code != tc.expectedStatus {
@@ -68,7 +70,7 @@ func TestScheduleCalls(t *testing.T) {
 	}
 }
 
-func registerTestResource(t *testing.T, server *Server) {
+func registerTestResource(t *testing.T, server *server.Server) {
 	// Register the "test_resource"
 	resourceData := struct {
 		Name         string `json:"name"`
@@ -91,7 +93,8 @@ func registerTestResource(t *testing.T, server *Server) {
 	}
 
 	rr := httptest.NewRecorder()
-	server.registerResource(rr, req)
+	handler := RegisterResource(server)
+	handler(rr, req)
 
 	if rr.Code != http.StatusCreated {
 		t.Errorf("expected status code %d, got %d", http.StatusCreated, rr.Code)

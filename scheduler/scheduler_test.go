@@ -1,4 +1,4 @@
-package main
+package scheduler
 
 import (
 	"reflect"
@@ -33,7 +33,7 @@ func TestSchedule(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		delays, _ := schedule(tt.numCalls, tt.requestCount, tt.timeFrame, []int64{}, 1729954499)
+		delays, _ := Schedule(tt.numCalls, tt.requestCount, tt.timeFrame, []int64{}, 1729954499)
 		if !reflect.DeepEqual(delays, tt.expected) {
 			t.Errorf("calculateDelays(%d, %d, %d) = %v; want %v", tt.numCalls, tt.requestCount, tt.timeFrame, delays, tt.expected)
 		}
@@ -61,7 +61,7 @@ func TestSequentialScheduling(t *testing.T) {
 
 	// First scheduling call
 	expectedFirst := []int{0, 0} // Both calls can happen immediately
-	delays, updatedCalls := schedule(numCalls, requestCount, timeFrame, previousCalls, now)
+	delays, updatedCalls := Schedule(numCalls, requestCount, timeFrame, previousCalls, now)
 	if !reflect.DeepEqual(delays, expectedFirst) {
 		t.Errorf("First schedule call = %v; want %v", delays, expectedFirst)
 	}
@@ -71,7 +71,7 @@ func TestSequentialScheduling(t *testing.T) {
 
 	// Second scheduling call
 	expectedSecond := []int{0, 30} // One call immediately, one delayed by 30s due to limited slots
-	delays, updatedCalls = schedule(numCalls, requestCount, timeFrame, updatedCalls, now)
+	delays, updatedCalls = Schedule(numCalls, requestCount, timeFrame, updatedCalls, now)
 	if !reflect.DeepEqual(delays, expectedSecond) {
 		t.Errorf("Second schedule call = %v; want %v", delays, expectedSecond)
 	}
@@ -81,7 +81,7 @@ func TestSequentialScheduling(t *testing.T) {
 
 	// Third scheduling call
 	expectedThird := []int{0, 30} // There was 2 calls in the past 60 seconds, we can schedule one and the other will be delayed by 30s
-	delays, updatedCalls = schedule(numCalls, requestCount, timeFrame, updatedCalls, now)
+	delays, updatedCalls = Schedule(numCalls, requestCount, timeFrame, updatedCalls, now)
 	if !reflect.DeepEqual(delays, expectedThird) {
 		t.Errorf("Third schedule call = %v; want %v", delays, expectedThird)
 	}

@@ -1,8 +1,10 @@
-package main
+package handlers
 
 import (
 	"bytes"
 	"encoding/json"
+	"meter_flow/model"
+	"meter_flow/server"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,7 +12,7 @@ import (
 
 func TestRegisterResource(t *testing.T) {
 	// Create a new server
-	server := NewServer()
+	server := server.NewServer()
 
 	// Test cases
 	testCases := []struct {
@@ -51,7 +53,8 @@ func TestRegisterResource(t *testing.T) {
 			rr := httptest.NewRecorder()
 
 			// Call the registerResource handler
-			server.registerResource(rr, req)
+			handler := RegisterResource(server)
+			handler(rr, req)
 
 			// Check the response status code
 			if rr.Code != tc.expectedStatus {
@@ -68,10 +71,10 @@ func TestRegisterResource(t *testing.T) {
 
 
 func TestListResources(t *testing.T) {
-	server := NewServer()
+	server := server.NewServer()
 
 	// Register some test resources
-	server.resources = map[string]Resource{
+	server.Resources = map[string]model.Resource{
 		"test_resource_1": {
 			Name:         "test_resource_1",
 			RequestCount: 10,
@@ -94,7 +97,8 @@ func TestListResources(t *testing.T) {
 	rr := httptest.NewRecorder()
 
 	// Call the listResources handler
-	server.listResources(rr, req)
+	handler := ListResources(server)
+	handler(rr, req)
 
 	// Check the response status code
 	if rr.Code != http.StatusOK {
@@ -102,7 +106,7 @@ func TestListResources(t *testing.T) {
 	}
 
 	// Check the response body
-	var resources []Resource
+	var resources []model.Resource
 	if err := json.NewDecoder(rr.Body).Decode(&resources); err != nil {
 		t.Errorf("failed to decode response body: %v", err)
 	}
@@ -113,10 +117,10 @@ func TestListResources(t *testing.T) {
 }
 
 func TestUpdateResource(t *testing.T) {
-	server := NewServer()
+	server := server.NewServer()
 
 	// Register a test resource
-	server.resources = map[string]Resource{
+	server.Resources = map[string]model.Resource{
 		"test_resource": {
 			Name:         "test_resource",
 			RequestCount: 10,
@@ -163,7 +167,8 @@ func TestUpdateResource(t *testing.T) {
 			rr := httptest.NewRecorder()
 
 			// Call the updateResource handler
-			server.updateResource(rr, req)
+			handler := UpdateResource(server)
+			handler(rr, req)
 
 			// Check the response status code
 			if rr.Code != tc.expectedStatus {
@@ -179,10 +184,10 @@ func TestUpdateResource(t *testing.T) {
 }
 
 func TestDeleteResource(t *testing.T) {
-	server := NewServer()
+	server := server.NewServer()
 
 	// Register a test resource
-	server.resources = map[string]Resource{
+	server.Resources = map[string]model.Resource{
 		"test_resource": {
 			Name:         "test_resource",
 			RequestCount: 10,
@@ -229,7 +234,8 @@ func TestDeleteResource(t *testing.T) {
 			rr := httptest.NewRecorder()
 
 			// Call the deleteResource handler
-			server.deleteResource(rr, req)
+			handler := DeleteResource(server)
+			handler(rr, req)
 
 			// Check the response status code
 			if rr.Code != tc.expectedStatus {

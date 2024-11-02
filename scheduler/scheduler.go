@@ -1,4 +1,4 @@
-package main
+package scheduler
 
 // schedule schedules a set of new requests based on a sliding window rate limiting algorithm.
 // TODO: Support other algorithms (?)
@@ -15,7 +15,7 @@ package main
 //
 // delays ([]int): A slice of delays (in seconds) for each new request.
 // previousCalls ([]int64): The updated slice of previous requests, including the new ones.func schedule(numCalls, requestCount, timeFrame int, previousCalls []int64, now int64) ([]int, []int64) {
-func schedule(numCalls, requestCount, timeFrame int, previousCalls []int64, now int64) ([]int, []int64) {
+func Schedule(numCalls, requestCount, timeFrame int, previousCalls []int64, now int64) ([]int, []int64) {
 	var delays []int
 
 	// Prune previous calls to only keep those within the current time frame

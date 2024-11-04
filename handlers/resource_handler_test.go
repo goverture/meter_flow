@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"meter_flow/model"
 	"meter_flow/server"
+	"meter_flow/storage"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -12,7 +13,8 @@ import (
 
 func TestRegisterResource(t *testing.T) {
 	// Create a new server
-	server := server.NewServer()
+	storage := storage.NewDummyStorage()
+	server := server.NewServer(storage)
 
 	// Test cases
 	testCases := []struct {
@@ -69,9 +71,9 @@ func TestRegisterResource(t *testing.T) {
 	}
 }
 
-
 func TestListResources(t *testing.T) {
-	server := server.NewServer()
+	storage := storage.NewDummyStorage()
+	server := server.NewServer(storage)
 
 	// Register some test resources
 	server.Resources = map[string]model.Resource{
@@ -117,7 +119,8 @@ func TestListResources(t *testing.T) {
 }
 
 func TestUpdateResource(t *testing.T) {
-	server := server.NewServer()
+	storage := storage.NewDummyStorage()
+	server := server.NewServer(storage)
 
 	// Register a test resource
 	server.Resources = map[string]model.Resource{
@@ -184,7 +187,8 @@ func TestUpdateResource(t *testing.T) {
 }
 
 func TestDeleteResource(t *testing.T) {
-	server := server.NewServer()
+	storage := storage.NewDummyStorage()
+	server := server.NewServer(storage)
 
 	// Register a test resource
 	server.Resources = map[string]model.Resource{

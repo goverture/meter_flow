@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"meter_flow/server"
+	"meter_flow/storage"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
 func TestScheduleCalls(t *testing.T) {
-	// Create a new server
-	server := server.NewServer()
+	storage := storage.NewDummyStorage()
+	server := server.NewServer(storage)
 
 	// Register a test resource
 	registerTestResource(t, server)

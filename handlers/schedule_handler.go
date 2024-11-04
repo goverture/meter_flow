@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func ScheduleCalls(srv* server.Server) http.HandlerFunc {
+func ScheduleCalls(srv *server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var data struct {
 			ResourceName string `json:"resource_name"`

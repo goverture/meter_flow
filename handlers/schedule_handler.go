@@ -41,7 +41,11 @@ func ScheduleCalls(srv *server.Server) http.HandlerFunc {
 		resource.ScheduledCalls = updatedCalls
 		srv.Resources[data.ResourceName] = resource
 
+		response := map[string]interface{}{
+			"delays": delays,
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(delays)
+		json.NewEncoder(w).Encode(response)
 	}
 }

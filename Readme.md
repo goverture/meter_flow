@@ -37,7 +37,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"resource_name": "rate_lim
 
 Since the rate limit is 2 requests per second for this resource, the response should be
 ```json
-[0,0,1,1,2]
+{"delays":[0,0,1,1,2]}
 ```
 which means that the first two calls can be made immediately, the third and fourth calls should be made after 1 second and the fifth call should be made after 2 seconds.
 

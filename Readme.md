@@ -2,7 +2,7 @@
 
 MeterFlow is a lightweight API call scheduler designed to help you manage and regulate the flow of outgoing API requests, avoiding rate limit errors. With MeterFlow, you can register resources with customizable request limits to schedule API calls efficiently and safely.
 
-# Example usage
+## Example usage
 
 ```ruby
 # Step 0 (only once): Register an API resource with MeterFlow, for instance "dummy_api" with 100 calls per minute
@@ -20,7 +20,7 @@ delays.each_with_index do |delay, index|
 end
 ```
 
-# Features
+## Features
 
 Supported rate limiting algorithms:
 - [x] Only "sliding window" (X calls in the past time frame) is supported at the moment.
@@ -33,7 +33,7 @@ Supported limits:
 Persistence
 - [x] Save the registered resources to disk upon exist
 
-# Getting started
+## Getting started
 
 Register a resource (a rate limited entity) by specifying the name, request count, and time frame (ex "openai_api": 100 calls / minute). Then schedule your API calls to the registered resource and MeterFlow will return the time intervals at which you can make the calls. MeterFlow will track the timing of each calls to ensure you never exceed the rate limit of the resource. Check the [resources wiki page](https://github.com/goverture/meter_flow/wiki/Resources) for more details.
 
